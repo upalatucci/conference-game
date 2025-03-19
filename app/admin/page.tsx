@@ -1,32 +1,53 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { motion } from "framer-motion"
-import { Play, RefreshCw, Sparkles, Plus, Music, Wifi, WifiOff } from "lucide-react"
-import { useSocket } from "../socket-provider"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { motion } from "framer-motion";
+import {
+  Play,
+  RefreshCw,
+  Sparkles,
+  Plus,
+  Music,
+  Wifi,
+  WifiOff,
+} from "lucide-react";
+import { useSocket } from "../socket-provider";
 
 export default function AdminPage() {
-  const { gameState, startCountdown, setAction, getRandomAction, resetGame, isConnected } = useSocket()
-  const [countdownDuration, setCountdownDuration] = useState("5")
-  const [customAction, setCustomAction] = useState("")
+  const {
+    gameState,
+    startCountdown,
+    setAction,
+    getRandomAction,
+    resetGame,
+    isConnected,
+  } = useSocket();
+  const [countdownDuration, setCountdownDuration] = useState("5");
+  const [customAction, setCustomAction] = useState("");
 
   // Set a custom action
   const handleSetAction = () => {
-    if (!customAction.trim()) return
-    console.log("Setting custom action:", customAction)
-    setAction(customAction)
-    setCustomAction("")
-  }
+    if (!customAction.trim()) return;
+    console.log("Setting custom action:", customAction);
+    setAction(customAction);
+    setCustomAction("");
+  };
 
   // Start the countdown
   const handleStartCountdown = () => {
-    console.log("Starting countdown with duration:", countdownDuration)
-    startCountdown(Number.parseInt(countdownDuration))
-  }
+    console.log("Starting countdown with duration:", countdownDuration);
+    startCountdown(Number.parseInt(countdownDuration));
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 text-white">
@@ -80,21 +101,31 @@ export default function AdminPage() {
               </h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="rounded-xl bg-white/5 p-4">
-                  <h3 className="mb-2 text-sm font-medium text-white/60">Azione Corrente</h3>
-                  <p className="text-lg font-semibold text-white">{gameState.action || "Nessuna azione impostata"}</p>
+                  <h3 className="mb-2 text-sm font-medium text-white/60">
+                    Azione Corrente
+                  </h3>
+                  <p className="text-lg font-semibold text-white">
+                    {gameState.action || "Nessuna azione impostata"}
+                  </p>
                 </div>
                 <div className="rounded-xl bg-white/5 p-4">
-                  <h3 className="mb-2 text-sm font-medium text-white/60">Conto alla Rovescia</h3>
+                  <h3 className="mb-2 text-sm font-medium text-white/60">
+                    Conto alla Rovescia
+                  </h3>
                   <div className="flex items-center gap-2">
                     {gameState.isCountdownActive ? (
                       <>
                         <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
-                        <p className="text-lg font-semibold text-white">Attivo ({gameState.countdown}s)</p>
+                        <p className="text-lg font-semibold text-white">
+                          Attivo ({gameState.countdown}s)
+                        </p>
                       </>
                     ) : (
                       <>
                         <div className="h-2 w-2 rounded-full bg-white/30"></div>
-                        <p className="text-lg font-semibold text-white">Non attivo</p>
+                        <p className="text-lg font-semibold text-white">
+                          Non attivo
+                        </p>
                       </>
                     )}
                   </div>
@@ -157,8 +188,14 @@ export default function AdminPage() {
                   <Label htmlFor="countdown-duration" className="text-white/80">
                     Durata (secondi)
                   </Label>
-                  <Select value={countdownDuration} onValueChange={setCountdownDuration}>
-                    <SelectTrigger id="countdown-duration" className="border-white/20 bg-white/5 text-white">
+                  <Select
+                    value={countdownDuration}
+                    onValueChange={setCountdownDuration}
+                  >
+                    <SelectTrigger
+                      id="countdown-duration"
+                      className="border-white/20 bg-white/5 text-white"
+                    >
                       <SelectValue placeholder="Seleziona durata" />
                     </SelectTrigger>
                     <SelectContent className="bg-indigo-900 text-white">
@@ -171,7 +208,11 @@ export default function AdminPage() {
                 </div>
                 <Button
                   onClick={handleStartCountdown}
-                  disabled={gameState.isCountdownActive || !gameState.action || !isConnected}
+                  disabled={
+                    gameState.isCountdownActive ||
+                    !gameState.action ||
+                    !isConnected
+                  }
                   className="flex-1 gap-2 bg-gradient-to-r from-pink-500 to-orange-500 text-white hover:from-pink-600 hover:to-orange-600 disabled:opacity-50"
                 >
                   <Play className="h-4 w-4" />
@@ -201,6 +242,5 @@ export default function AdminPage() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }
-

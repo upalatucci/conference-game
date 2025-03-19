@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
 
 // List of fun, appropriate actions for conference attendees (in Italian)
 const ACTIONS = [
@@ -22,7 +22,7 @@ const ACTIONS = [
   "Comportati come se avessi appena avuto un'idea brillante",
   "Fingi di scattare una foto del palco",
   "Mostra la tua migliore impressione di una rockstar",
-]
+];
 
 // Reference to the in-memory game state
 const gameState = {
@@ -30,16 +30,15 @@ const gameState = {
   isCountdownActive: false,
   countdown: 0,
   countdownEndTime: 0,
-}
+};
 
 export async function POST() {
   // Generate a random action
-  const randomIndex = Math.floor(Math.random() * ACTIONS.length)
-  const action = ACTIONS[randomIndex]
+  const randomIndex = Math.floor(Math.random() * ACTIONS.length);
+  const action = ACTIONS[randomIndex];
 
   // Set the action
-  gameState.action = action
+  gameState.action = action;
 
-  return NextResponse.json({ success: true, action })
+  return NextResponse.json({ success: true, action });
 }
-

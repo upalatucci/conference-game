@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
 
 // In-memory game state (in a real app, use a database or Redis)
 const gameState = {
@@ -6,25 +6,27 @@ const gameState = {
   isCountdownActive: false,
   countdown: 0,
   countdownEndTime: 0,
-}
+};
 
 // Update countdown if active
 function updateCountdown() {
   if (gameState.isCountdownActive) {
-    const now = Date.now()
-    const remaining = Math.max(0, Math.ceil((gameState.countdownEndTime - now) / 1000))
+    const now = Date.now();
+    const remaining = Math.max(
+      0,
+      Math.ceil((gameState.countdownEndTime - now) / 1000)
+    );
 
-    gameState.countdown = remaining
+    gameState.countdown = remaining;
 
     if (remaining === 0) {
-      gameState.isCountdownActive = false
+      gameState.isCountdownActive = false;
     }
   }
 }
 
 export async function GET() {
-  updateCountdown()
+  updateCountdown();
 
-  return NextResponse.json(gameState)
+  return NextResponse.json(gameState);
 }
-

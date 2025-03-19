@@ -1,16 +1,23 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { motion, AnimatePresence } from "framer-motion"
-import confetti from "canvas-confetti"
-import { Sparkles, Zap, Rocket, PartyPopper, Wifi, WifiOff } from "lucide-react"
-import { useSocket } from "./socket-provider"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
+import {
+  Sparkles,
+  Zap,
+  Rocket,
+  PartyPopper,
+  Wifi,
+  WifiOff,
+} from "lucide-react";
+import { useSocket } from "./socket-provider";
 
 export default function ConferenceGame() {
-  const { gameState, setAction, isConnected } = useSocket()
-  const [isMounted, setIsMounted] = useState(false)
-  const [localGameState, setLocalGameState] = useState("waiting") // waiting, ready, countdown, completed
+  const { gameState, setAction, isConnected } = useSocket();
+  const [isMounted, setIsMounted] = useState(false);
+  const [localGameState, setLocalGameState] = useState("waiting"); // waiting, ready, countdown, completed
 
   // Generate a random action
   const generateAction = () => {
@@ -27,82 +34,82 @@ export default function ConferenceGame() {
       "Fai la tua migliore posa da supereroe",
       "Fingi di nuotare",
       "Muoviti come se fossi al rallentatore",
-      "Fingi di dirigere un'orchestra",
+      "Fingi di dirigere un&apos;orchestra",
       "Mostra la tua migliore impressione di una statua",
       "Comportati come se stessi camminando contro un vento forte",
       "Fingi di essere in una scatola invisibile",
       "Fai la tua migliore impressione di un albero",
-      "Comportati come se avessi appena avuto un'idea brillante",
+      "Comportati come se avessi appena avuto un&apos;idea brillante",
       "Fingi di scattare una foto del palco",
       "Mostra la tua migliore impressione di una rockstar",
-    ]
-    const randomIndex = Math.floor(Math.random() * ACTIONS.length)
-    return ACTIONS[randomIndex]
-  }
+    ];
+    const randomIndex = Math.floor(Math.random() * ACTIONS.length);
+    return ACTIONS[randomIndex];
+  };
 
   // Set a new action (for visitors to see)
   const setNewAction = () => {
-    const newAction = generateAction()
-    setAction(newAction)
-    setLocalGameState("ready")
-  }
+    const newAction = generateAction();
+    setAction(newAction);
+    setLocalGameState("ready");
+  };
 
   // Trigger confetti explosion
   const triggerConfetti = () => {
-    const duration = 3 * 1000
-    const animationEnd = Date.now() + duration
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 }
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    function randomInRange(min, max) {
-      return Math.random() * (max - min) + min
+    function randomInRange(min: number, max: number) {
+      return Math.random() * (max - min) + min;
     }
 
     const interval = setInterval(() => {
-      const timeLeft = animationEnd - Date.now()
+      const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
-        return clearInterval(interval)
+        return clearInterval(interval);
       }
 
-      const particleCount = 50 * (timeLeft / duration)
+      const particleCount = 50 * (timeLeft / duration);
 
       // Since particles fall down, start a bit higher than random
       confetti(
         Object.assign({}, defaults, {
           particleCount,
           origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-        }),
-      )
+        })
+      );
       confetti(
         Object.assign({}, defaults, {
           particleCount,
           origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-        }),
-      )
-    }, 250)
-  }
+        })
+      );
+    }, 250);
+  };
 
   // Update local game state based on socket game state
   useEffect(() => {
     if (gameState.action && localGameState === "waiting") {
-      setLocalGameState("ready")
+      setLocalGameState("ready");
     }
 
     if (gameState.isCountdownActive) {
-      setLocalGameState("countdown")
+      setLocalGameState("countdown");
     } else if (gameState.countdown === 0 && localGameState === "countdown") {
-      setLocalGameState("completed")
-      triggerConfetti()
+      setLocalGameState("completed");
+      triggerConfetti();
     }
 
     if (!gameState.action && localGameState !== "waiting") {
-      setLocalGameState("waiting")
+      setLocalGameState("waiting");
     }
-  }, [gameState, localGameState])
+  }, [gameState, localGameState]);
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
+    setIsMounted(true);
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-purple-600 via-violet-600 to-indigo-700 text-white">
@@ -122,14 +129,30 @@ export default function ConferenceGame() {
                 key={i}
                 className="absolute rounded-full bg-white/10"
                 initial={{
-                  x: Math.random() * (typeof window !== "undefined" ? window.innerWidth : 1000),
-                  y: Math.random() * (typeof window !== "undefined" ? window.innerHeight : 800),
+                  x:
+                    Math.random() *
+                    (typeof window !== "undefined" ? window.innerWidth : 1000),
+                  y:
+                    Math.random() *
+                    (typeof window !== "undefined" ? window.innerHeight : 800),
                   scale: Math.random() * 0.5 + 0.5,
                   opacity: Math.random() * 0.5 + 0.1,
                 }}
                 animate={{
-                  y: [null, Math.random() * (typeof window !== "undefined" ? window.innerHeight : 800)],
-                  x: [null, Math.random() * (typeof window !== "undefined" ? window.innerWidth : 1000)],
+                  y: [
+                    null,
+                    Math.random() *
+                      (typeof window !== "undefined"
+                        ? window.innerHeight
+                        : 800),
+                  ],
+                  x: [
+                    null,
+                    Math.random() *
+                      (typeof window !== "undefined"
+                        ? window.innerWidth
+                        : 1000),
+                  ],
                   transition: {
                     duration: Math.random() * 20 + 10,
                     repeat: Number.POSITIVE_INFINITY,
@@ -190,7 +213,8 @@ export default function ConferenceGame() {
                     <PartyPopper className="h-32 w-32 text-yellow-300" />
                   </div>
                   <p className="text-center text-xl font-medium text-white/90">
-                    Preparati per il divertimento! L'organizzatore mostrerà presto un'azione.
+                    Preparati per il divertimento! L&apos;organizzatore mostrerà
+                    presto un&apos;azione.
                   </p>
                 </div>
                 <div className="flex justify-center">
@@ -220,7 +244,9 @@ export default function ConferenceGame() {
               >
                 <div className="mb-8 space-y-6">
                   <div className="rounded-xl bg-gradient-to-r from-pink-500/20 to-purple-500/20 p-8">
-                    <h2 className="mb-4 text-2xl font-bold text-white/90">Preparati a:</h2>
+                    <h2 className="mb-4 text-2xl font-bold text-white/90">
+                      Preparati a:
+                    </h2>
                     <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-purple-400">
                       {gameState.action}
                     </p>
@@ -228,7 +254,9 @@ export default function ConferenceGame() {
                   <div className="flex justify-center">
                     <div className="flex items-center gap-2 rounded-full bg-white/20 px-6 py-3 text-white/90">
                       <Zap className="h-5 w-5 text-yellow-300" />
-                      <p className="text-lg font-medium">Aspetta il conto alla rovescia!</p>
+                      <p className="text-lg font-medium">
+                        Aspetta il conto alla rovescia!
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -246,7 +274,9 @@ export default function ConferenceGame() {
               >
                 <div className="mb-8 space-y-6">
                   <div className="rounded-xl bg-gradient-to-r from-pink-500/20 to-purple-500/20 p-8">
-                    <h2 className="mb-4 text-2xl font-bold text-white/90">Preparati a:</h2>
+                    <h2 className="mb-4 text-2xl font-bold text-white/90">
+                      Preparati a:
+                    </h2>
                     <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-purple-400">
                       {gameState.action}
                     </p>
@@ -262,7 +292,9 @@ export default function ConferenceGame() {
                         exit={{ scale: 1.2, opacity: 0 }}
                         className="relative flex h-40 w-40 items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg"
                       >
-                        <span className="text-8xl font-extrabold">{gameState.countdown}</span>
+                        <span className="text-8xl font-extrabold">
+                          {gameState.countdown}
+                        </span>
                       </motion.div>
                     </div>
                   </div>
@@ -286,11 +318,15 @@ export default function ConferenceGame() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
                   >
-                    <h2 className="mb-4 text-2xl font-bold text-white/90">Tutti insieme:</h2>
+                    <h2 className="mb-4 text-2xl font-bold text-white/90">
+                      Tutti insieme:
+                    </h2>
                     <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-purple-400">
                       {gameState.action}
                     </p>
-                    <p className="mt-4 text-xl font-medium text-white/90">Fallo ora!</p>
+                    <p className="mt-4 text-xl font-medium text-white/90">
+                      Fallo ora!
+                    </p>
                   </motion.div>
 
                   <motion.div
@@ -318,6 +354,5 @@ export default function ConferenceGame() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
