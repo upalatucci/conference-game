@@ -5,7 +5,6 @@ import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Socket } from "socket.io-client";
 import { getSocket, disconnectSocket, type GameState } from "@/lib/socket";
-import { useFallbackGameState } from "./socket-fallback";
 
 // Default game state
 const defaultGameState: GameState = {
@@ -44,9 +43,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
   const [useWebSockets, setUseWebSockets] = useState(true);
 
-  // Get fallback implementation
-  const fallback = useFallbackGameState();
-
   useEffect(() => {
     // Try to use WebSockets first
     try {
@@ -64,7 +60,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         setIsConnected(false);
 
         // Fall back to polling if WebSockets fail
-        setUseWebSockets(false);
       };
 
       const onGameState = (newState: GameState) => {
@@ -72,13 +67,13 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         setGameState(newState);
       };
 
+      console.log("sockets");
       // Register event handlers
       socketInstance.on("connect", onConnect);
       socketInstance.on("disconnect", onDisconnect);
       socketInstance.on("gameState", onGameState);
       socketInstance.on("connect_error", () => {
         console.log("WebSocket connection error, falling back to polling");
-        setUseWebSockets(false);
       });
 
       // Check if already connected
@@ -95,7 +90,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       };
     } catch (error) {
       console.error("Error initializing WebSockets:", error);
-      setUseWebSockets(false);
     }
   }, []);
 
@@ -106,7 +100,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socket?.emit("startCountdown", duration);
     } else {
       console.log("Starting countdown via fallback:", duration);
-      fallback.startCountdown(duration);
     }
   };
 
@@ -116,7 +109,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socket?.emit("setAction", action);
     } else {
       console.log("Setting action via fallback:", action);
-      fallback.setAction(action);
     }
   };
 
@@ -126,7 +118,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socket?.emit("randomAction");
     } else {
       console.log("Getting random action via fallback");
-      fallback.getRandomAction();
     }
   };
 
@@ -136,19 +127,18 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socket?.emit("resetGame");
     } else {
       console.log("Resetting game via fallback");
-      fallback.resetGame();
     }
   };
 
   // Use either WebSocket or fallback values
   const contextValue = {
     socket,
-    gameState: useWebSockets ? gameState : fallback.gameState,
+    gameState,
     startCountdown,
     setAction,
     getRandomAction,
     resetGame,
-    isConnected: useWebSockets ? isConnected : fallback.isConnected,
+    isConnected,
   };
 
   return (

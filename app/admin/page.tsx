@@ -32,6 +32,7 @@ export default function AdminPage() {
     resetGame,
     isConnected,
   } = useSocket();
+
   const [countdownDuration, setCountdownDuration] = useState("5");
   const [customAction, setCustomAction] = useState("");
 

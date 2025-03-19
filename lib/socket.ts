@@ -15,7 +15,7 @@ export const getSocket = (): Socket => {
   if (!socket) {
     // Get the correct WebSocket URL based on environment
     const socketUrl =
-      typeof window !== "undefined" ? window.location.origin : "";
+      typeof window !== "undefined" ? `${window.location.hostname}:80` : "";
 
     socket = io(socketUrl, {
       reconnectionAttempts: 5,
